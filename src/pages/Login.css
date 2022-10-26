@@ -1,0 +1,12 @@
+.container {
+  margin: 200px auto 0;
+  width: 400px;
+  height: 200px;
+}
+
+.warnning {
+  color: red;
+  font-weight: bold;
+  margin: auto;
+  text-align: center;
+}
