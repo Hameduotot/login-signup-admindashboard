@@ -1,17 +1,25 @@
 import React, { useState } from "react";
 import userList from "../../../server";
 
-function User({ userkey, index }) {
+function User({ userkey, index, onDelete }) {
   const [editemode, setEdireMode] = useState(false);
-  const [userdata, setUserData] = useState({
-    email: "",
-    name: "",
-    username: "",
-    password: "",
-  });
   const { email, username, pass, role, name } = userList.getuser(userkey);
+  const [userdata, setUserData] = useState({
+    email,
+    name,
+    username,
+    password: pass,
+    role,
+  });
+
   const hanldeChage = (e) => {
     setUserData({ ...userdata, [e.target.name]: e.target.value });
+  };
+
+  const submitEdireMode = () => {
+    userList.editeUser(userkey, username, pass, name, email, role);
+    console.log(userList.getusers());
+    userList.setEdireMode(false);
   };
   return (
     <>
@@ -28,14 +36,24 @@ function User({ userkey, index }) {
                   {editemode === false ? (
                     username
                   ) : (
-                    <input type={"text"} onChange={hanldeChage} />
+                    <input
+                      name="username"
+                      type={"text"}
+                      onChange={hanldeChage}
+                      value={userdata.username}
+                    />
                   )}
                 </div>
                 <div className="widget-subheading opacity-7">
                   {editemode === false ? (
                     name
                   ) : (
-                    <input name={name} type={"text"} onChange={hanldeChage} />
+                    <input
+                      name="name"
+                      type={"text"}
+                      onChange={hanldeChage}
+                      value={userdata.name}
+                    />
                   )}
                 </div>
               </div>
@@ -47,14 +65,24 @@ function User({ userkey, index }) {
           {editemode === false ? (
             email
           ) : (
-            <input type={"text"} onChange={hanldeChage} />
+            <input
+              name="email"
+              type={"text"}
+              onChange={hanldeChage}
+              value={userdata.email}
+            />
           )}
         </td>
         <td className="text-center">
           {editemode === false ? (
             pass
           ) : (
-            <input type={"text"} onChange={hanldeChage} />
+            <input
+              name="password"
+              type={"text"}
+              onChange={hanldeChage}
+              value={userdata.password}
+            />
           )}
         </td>
 
@@ -68,25 +96,48 @@ function User({ userkey, index }) {
                 : "badge-warning"
             }`}
           >
-            {role}
+            {editemode === false ? (
+              role
+            ) : (
+              <input
+                name="role"
+                type={"text"}
+                onChange={hanldeChage}
+                value={userdata.role}
+              />
+            )}
           </div>
         </td>
         <td className="text-center">
-          <button
-            onClick={() => setEdireMode(true)}
-            type="button"
-            id="PopoverCustomT-1"
-            className="btn btn-primary btn-sm"
-          >
-            E
-          </button>
+          {editemode ? (
+            <button
+              onClick={submitEdireMode}
+              type="button"
+              id="PopoverCustomT-1"
+              className="btn btn-secondary btn-sm"
+            >
+              Ok
+            </button>
+          ) : (
+            <button
+              onClick={() => setEdireMode(true)}
+              type="button"
+              id="PopoverCustomT-1"
+              className="btn btn-primary btn-sm"
+            >
+              Edite
+            </button>
+          )}
         </td>
         <td className="text-center">
           <button
             type="button"
             id="PopoverCustomT-1"
             className="btn btn-secondary btn-sm"
-            onClick={() => userList.deleteUser(userkey)}
+            onClick={() => {
+              onDelete();
+              userList.deleteUser(userkey);
+            }}
           >
             X
           </button>

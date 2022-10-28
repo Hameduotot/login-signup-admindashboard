@@ -10,6 +10,13 @@ const Input = styled.input`
   padding: 15px;
   box-sizing: border-box;
   font-size: 14px;
+  background: #ecf0f3;
+  padding: 10px;
+  padding-left: 20px;
+  height: 50px;
+  font-size: 14px;
+  border-radius: 50px;
+  box-shadow: inset 6px 6px 6px #cbced1, inset -6px -6px 6px white;
 `;
 
 const Button = styled.button`
@@ -25,14 +32,23 @@ const Button = styled.button`
   -webkit-transition: all 0.3 ease;
   transition: all 0.3 ease;
   cursor: pointer;
+  color: white;
+  margin-top: 20px;
+  background: #1da1f2;
+  height: 40px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: 900;
+  box-shadow: 6px 6px 6px #cbced1, -6px -6px 6px white;
+  transition: 0.5s;
   &:hover,
   :active,
   ::after {
-    background: #43a047;
+    box-shadow: none;
   }
 `;
 
 const H1 = styled.h1`
   text-align: center;
 `;
-export { Input, Button ,H1 };
+export { Input, Button, H1 };

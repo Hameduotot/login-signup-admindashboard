@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import TotalUsers from "./components/TotalUsers";
 import User from "./components/User";
 import { Helmet } from "react-helmet";
@@ -6,15 +6,17 @@ import userList from "../../server";
 
 function AdminDashboad({ auth }) {
   const users = Object.keys(userList.getusers());
+  const [usershow, setUserShow] = useState(users);
+
+  useEffect(() => {
+    setUserShow(users);
+  }, []);
 
   if (auth)
     return (
       <>
         <Helmet>
-          <title>
-            Analytics Dashboard - This is an example dashboard created using
-            build-in elements and components.
-          </title>
+          <title>Dashboard</title>
           <meta
             name="viewport"
             content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no"
@@ -54,8 +56,15 @@ function AdminDashboad({ auth }) {
                   </tr>
                 </thead>
                 <tbody>
-                  {users.map((user, index) => (
-                    <User key={user} userkey={user} index={index} />
+                  {usershow.map((user, index) => (
+                    <User
+                      key={user}
+                      userkey={user}
+                      index={index}
+                      onDelete={() =>
+                        setUserShow(usershow.filter((u) => user !== u))
+                      }
+                    />
                   ))}
                 </tbody>
               </table>

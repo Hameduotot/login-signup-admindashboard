@@ -6,6 +6,7 @@ import Dashboard from "./pages/Dashboard";
 import { AuthContext } from "./context/auth";
 import { useState } from "react";
 import AdminDashboad from "./pages/AdminDashboard/AdminDashboad";
+import Home from "./pages/Home/Home";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -14,6 +15,7 @@ function App() {
     <BrowserRouter>
       <AuthContext.Provider value={isAuthenticated}>
         <Routes>
+          <Route path="/" element={<Home />} />
           <Route
             path="/login"
             element={

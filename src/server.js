@@ -51,6 +51,17 @@ class UserList {
   getusers() {
     return this.Userlist;
   }
+  editeUser(previousUser, newUser, newPassword, newName, newEmail, newRole) {
+    this.deleteUser(previousUser);
+    console.log(this.getusers());
+    this.Userlist[newUser] = {
+      username: newUser,
+      pass: newPassword,
+      name: newName,
+      email: newEmail,
+      role: newRole,
+    };
+  }
 }
 
 const userList = new UserList();
