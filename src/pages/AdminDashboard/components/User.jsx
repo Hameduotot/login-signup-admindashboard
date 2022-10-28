@@ -3,7 +3,8 @@ import userList from "../../../server";
 
 function User({ userkey, index, onDelete }) {
   const [editemode, setEdireMode] = useState(false);
-  const { email, username, pass, role, name } = userList.getuser(userkey);
+  let { email, username, pass, role, name } = userList.getuser(userkey);
+
   const [userdata, setUserData] = useState({
     email,
     name,
@@ -17,9 +18,15 @@ function User({ userkey, index, onDelete }) {
   };
 
   const submitEdireMode = () => {
-    userList.editeUser(userkey, username, pass, name, email, role);
-    console.log(userList.getusers());
-    userList.setEdireMode(false);
+    userList.editeUser(
+      userkey,
+      userdata.username,
+      userdata.password,
+      userdata.name,
+      userdata.email,
+      userdata.role
+    );
+    setEdireMode(false);
   };
   return (
     <>
@@ -34,7 +41,7 @@ function User({ userkey, index, onDelete }) {
               <div className="widget-content-left flex2">
                 <div className="widget-heading">
                   {editemode === false ? (
-                    username
+                    userdata.username
                   ) : (
                     <input
                       name="username"
@@ -46,7 +53,7 @@ function User({ userkey, index, onDelete }) {
                 </div>
                 <div className="widget-subheading opacity-7">
                   {editemode === false ? (
-                    name
+                    userdata.name
                   ) : (
                     <input
                       name="name"
@@ -63,7 +70,7 @@ function User({ userkey, index, onDelete }) {
 
         <td className="text-center">
           {editemode === false ? (
-            email
+            userdata.email
           ) : (
             <input
               name="email"
@@ -75,7 +82,7 @@ function User({ userkey, index, onDelete }) {
         </td>
         <td className="text-center">
           {editemode === false ? (
-            pass
+            userdata.password
           ) : (
             <input
               name="password"
