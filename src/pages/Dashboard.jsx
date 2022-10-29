@@ -1,8 +1,17 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useAuth } from "../context/auth";
+import { useNavigate } from "react-router-dom";
+function AdminDashboad() {
+  const auth = useAuth();
+  const navigate = useNavigate();
 
+  useEffect(() => {
+    if (!auth.user.isAuthenticated) {
+      navigate("/login");
+    }
+  }, [auth.user.isAuthenticated]);
 
-function AdminDashboad({ auth }) {
-  if (auth)
+  if (auth.user.isAuthenticated)
     return (
       <>
         <meta charSet="utf-8" />
@@ -966,7 +975,6 @@ function AdminDashboad({ auth }) {
                   </div>
                 </div>{" "}
                 <div className="row">
-                
                   <div className="col-md-6 col-xl-4">
                     <div className="card mb-3 widget-content bg-arielle-smile">
                       <div className="widget-content-wrapper text-white">

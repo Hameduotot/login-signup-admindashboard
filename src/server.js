@@ -1,69 +1,53 @@
-function User(username, password, name, email) {
+function User(username, password, name, email, role) {
   this.username = username;
   this.password = password;
   this.name = name;
   this.email = email;
+  this.role = role;
 }
 class UserList {
   constructor() {
-    this.Userlist = {
-      user1: {
-        username: "user1",
-        pass: "pass1",
-        name: "name1",
-        email: "email1@yahoo.com",
-        role: "user",
-      },
-      user2: {
-        username: "user2",
-        pass: "pass2",
-        name: "name2",
-        email: "email2@yahoo.com",
-        role: "admin",
-      },
-      user3: {
-        username: "user3",
-        pass: "pass3",
-        name: "name3",
-        email: "email3@yahoo.com",
-        role: "user",
-      },
-    };
+    this.Userlist = [
+      new User("user1", "pass1", "name1", "email1@yahoo.com", "user"),
+      new User("user2", "pass2", "name2", "email2@yahoo.com", "admin"),
+      new User("user3", "pass3", "name3", "email3@yahoo.com", "user"),
+    ];
   }
 
   addUser(username, password, name, email) {
-    const user = new User(username, password, name, email);
-    user.role = "user";
-    this.Userlist[username] = user;
+    const NewUser = new User(username, password, name, email, "user");
+    this.Userlist.push(NewUser);
   }
-  deleteUser(user) {
-    delete this.Userlist[user];
+  deleteUser(username) {
+    this.Userlist = this.Userlist.filter((u) => u.username !== username);
   }
   getuser(username) {
-    return this.Userlist[username];
+   
+    return this.Userlist.find((u) => u.username === username);
   }
   login(username, password) {
-    if (this.Userlist[username] && this.Userlist[username].pass === password) {
-      return true;
-    }
-    return false;
+    // if (this.Userlist[username] && this.Userlist[username].pass === password) {
+    //   return true;
+    // }
+    // return false;
+    // return !!(
+    //   this.Userlist[username] && this.Userlist[username].pass === password
+    // );
+    let checkUserName = this.Userlist.find((u) => u.username === username);
+    return !!(checkUserName.password === password);
   }
   getusers() {
     return this.Userlist;
   }
   editeUser(previousUser, newUser, newPassword, newName, newEmail, newRole) {
-    this.deleteUser(previousUser);
-    console.log(this.getusers());
-    this.Userlist[newUser] = {
-      username: newUser,
-      pass: newPassword,
-      name: newName,
-      email: newEmail,
-      role: newRole,
-    };
+    const editedUsers = this.Userlist.map((user) => {
+      if (user.username === previousUser) {
+        return new User(newUser, newPassword, newName, newEmail, newRole);
+      }
+      return user;
+    });
+    this.Userlist = editedUsers;
   }
 }
 
-const userList = new UserList();
-
-export default userList;
+export default new UserList();

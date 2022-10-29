@@ -9,31 +9,32 @@ import AdminDashboad from "./pages/AdminDashboard/AdminDashboad";
 import Home from "./pages/Home/Home";
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isAuthenticatedAdmin, setIsAuthenticatedAdmin] = useState(false);
+  const [currnetUser, setCurrentUser] = useState({
+    isAuthenticated: false,
+    role: "",
+  });
+  // const [isAuthenticated, setIsAuthenticated] = useState(false);
+  // const [isAuthenticatedAdmin, setIsAuthenticatedAdmin] = useState(false);
+
   return (
     <BrowserRouter>
-      <AuthContext.Provider value={isAuthenticated}>
+      <AuthContext.Provider
+        value={{ user: currnetUser, setUser: setCurrentUser }}
+      >
         <Routes>
           <Route path="/" element={<Home />} />
           <Route
             path="/login"
             element={
               <Login
-                setauth={setIsAuthenticated}
-                setauthAdmin={setIsAuthenticatedAdmin}
+              // setauth={setIsAuthenticated}
+              // setauthAdmin={setIsAuthenticatedAdmin}
               />
             }
           />
           <Route path="/signup" element={<SignUp />} />
-          <Route
-            path="/dashboard"
-            element={<Dashboard auth={isAuthenticated} />}
-          />
-          <Route
-            path="/admindashboard"
-            element={<AdminDashboad auth={isAuthenticatedAdmin} />}
-          />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/admindashboard" element={<AdminDashboad />} />
         </Routes>
       </AuthContext.Provider>
     </BrowserRouter>

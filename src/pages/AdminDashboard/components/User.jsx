@@ -1,36 +1,67 @@
 import React, { useState } from "react";
 import userList from "../../../server";
+import InputAdminOrData from "./InputAdminOrData";
 
-function User({ userkey, index, onDelete }) {
-  const [editemode, setEdireMode] = useState(false);
-  let { email, username, pass, role, name } = userList.getuser(userkey);
+function User({ userData = {}, index = "#", setUserShow, addUser = false }) {
+  const [editemode, setEditeMode] = useState(false);
+  let { email, username, password, role, name } = userData;
 
-  const [userdata, setUserData] = useState({
-    email,
-    name,
-    username,
-    password: pass,
-    role,
-  });
+  let initState = !!addUser
+    ? {
+        email: "",
+        name: "",
+        username: "",
+        password: "",
+        role: "user",
+      }
+    : {
+        email,
+        name,
+        username,
+        password,
+        role,
+      };
+
+  const [userdata, setUserData] = useState(initState);
 
   const hanldeChage = (e) => {
     setUserData({ ...userdata, [e.target.name]: e.target.value });
   };
 
+  const handleDeleteUser = () => {
+    if (!addUser) {
+      userList.deleteUser(username);
+      const userAfterDelete = userList.getusers();
+      setUserShow(userAfterDelete);
+    } else if (addUser) {
+      setEditeMode(true);
+    }
+  };
+
   const submitEdireMode = () => {
     userList.editeUser(
-      userkey,
+      userData,
       userdata.username,
       userdata.password,
       userdata.name,
       userdata.email,
       userdata.role
     );
-    setEdireMode(false);
+    setEditeMode(false);
   };
   return (
     <>
       <tr>
+        <td className="text-center">
+          <button
+            type="button"
+            id="PopoverCustomT-1"
+            className="btn btn-secondary btn-sm"
+            onClick={handleDeleteUser}
+          >
+            {addUser ? "+" : "-"}
+          </button>
+        </td>
         <td className="text-center text-muted">{index + 1}</td>
         <td>
           <div className="widget-content p-0">
@@ -40,28 +71,20 @@ function User({ userkey, index, onDelete }) {
               </div>
               <div className="widget-content-left flex2">
                 <div className="widget-heading">
-                  {editemode === false ? (
-                    userdata.username
-                  ) : (
-                    <input
-                      name="username"
-                      type={"text"}
-                      onChange={hanldeChage}
-                      value={userdata.username}
-                    />
-                  )}
+                  <InputAdminOrData
+                    value={userdata.username}
+                    name={"username"}
+                    editemode={editemode}
+                    onChange={hanldeChage}
+                  />
                 </div>
                 <div className="widget-subheading opacity-7">
-                  {editemode === false ? (
-                    userdata.name
-                  ) : (
-                    <input
-                      name="name"
-                      type={"text"}
-                      onChange={hanldeChage}
-                      value={userdata.name}
-                    />
-                  )}
+                  <InputAdminOrData
+                    value={userdata.name}
+                    name={"name"}
+                    editemode={editemode}
+                    onChange={hanldeChage}
+                  />
                 </div>
               </div>
             </div>
@@ -69,28 +92,20 @@ function User({ userkey, index, onDelete }) {
         </td>
 
         <td className="text-center">
-          {editemode === false ? (
-            userdata.email
-          ) : (
-            <input
-              name="email"
-              type={"text"}
-              onChange={hanldeChage}
-              value={userdata.email}
-            />
-          )}
+          <InputAdminOrData
+            value={userdata.email}
+            name={"email"}
+            editemode={editemode}
+            onChange={hanldeChage}
+          />
         </td>
         <td className="text-center">
-          {editemode === false ? (
-            userdata.password
-          ) : (
-            <input
-              name="password"
-              type={"text"}
-              onChange={hanldeChage}
-              value={userdata.password}
-            />
-          )}
+          <InputAdminOrData
+            value={userdata.password}
+            name={"password"}
+            editemode={editemode}
+            onChange={hanldeChage}
+          />
         </td>
 
         <td className="text-center">
@@ -103,16 +118,12 @@ function User({ userkey, index, onDelete }) {
                 : "badge-warning"
             }`}
           >
-            {editemode === false ? (
-              role
-            ) : (
-              <input
-                name="role"
-                type={"text"}
-                onChange={hanldeChage}
-                value={userdata.role}
-              />
-            )}
+            <InputAdminOrData
+              value={userdata.role}
+              name={"role"}
+              editemode={editemode}
+              onChange={hanldeChage}
+            />
           </div>
         </td>
         <td className="text-center">
@@ -127,7 +138,7 @@ function User({ userkey, index, onDelete }) {
             </button>
           ) : (
             <button
-              onClick={() => setEdireMode(true)}
+              onClick={() => setEditeMode(true)}
               type="button"
               id="PopoverCustomT-1"
               className="btn btn-primary btn-sm"
@@ -135,19 +146,6 @@ function User({ userkey, index, onDelete }) {
               Edite
             </button>
           )}
-        </td>
-        <td className="text-center">
-          <button
-            type="button"
-            id="PopoverCustomT-1"
-            className="btn btn-secondary btn-sm"
-            onClick={() => {
-              onDelete();
-              userList.deleteUser(userkey);
-            }}
-          >
-            X
-          </button>
         </td>
       </tr>
     </>

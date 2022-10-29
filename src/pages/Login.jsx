@@ -1,14 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, Input } from "../components/formStyles";
+import { useAuth } from "../context/auth";
 import userList from "./../server";
 import "./Login.css";
 
-function Login({ setauth, setauthAdmin }) {
+function Login(
+ 
+) {
   const [user, setUser] = useState({
     username: "",
     password: "",
   });
+  const auth = useAuth();
   const [isLogin, setIsLogin] = useState(null);
 
   const hanldeChage = (e) => {
@@ -19,20 +23,32 @@ function Login({ setauth, setauthAdmin }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setIsLogin(userList.login(user.username, user.password));
+    const isLoggedIn = userList.login(user.username, user.password);
+
+    let role = "";
+    if (isLoggedIn) {
+      role = userList.getuser(user.username).role;
+      auth.setUser({
+        isAuthenticated: isLoggedIn,
+        role,
+      });
+      navigate(role === "admin" ? "/admindashboard" : "/dashboard");
+    }
+
+    // setIsLogin(userList.login(user.username, user.password));
   };
 
-  useEffect(() => {
-    if (isLogin) {
-      if (userList.getuser(user.username).role === "admin") {
-        navigate("/admindashboard");
-        setauthAdmin(true);
-      } else {
-        navigate("/dashboard");
-        setauth(true);
-      }
-    }
-  }, [isLogin]);
+  // useEffect(() => {
+  //   if (isLogin) {
+  //     if (userList.getuser(user.username).role === "admin") {
+  //       navigate("/admindashboard");
+  //       setauthAdmin(true);
+  //     } else {
+  //       navigate("/dashboard");
+  //       setauth(true);
+  //     }
+  //   }
+  // }, [isLogin]);
 
   return (
     <div>

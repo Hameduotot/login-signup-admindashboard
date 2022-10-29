@@ -3,16 +3,29 @@ import TotalUsers from "./components/TotalUsers";
 import User from "./components/User";
 import { Helmet } from "react-helmet";
 import userList from "../../server";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/auth";
 
-function AdminDashboad({ auth }) {
-  const users = Object.keys(userList.getusers());
+function AdminDashboad() {
+  const users = userList.getusers();
   const [usershow, setUserShow] = useState(users);
 
   useEffect(() => {
     setUserShow(users);
   }, []);
 
-  if (auth)
+  const auth = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!auth.user.isAuthenticated) {
+      navigate("/login");
+    } else if (auth.user.role !== "admin") {
+      navigate("/access-denied");
+    }
+  }, [auth.user.isAuthenticated, auth.user.role]);
+
+  if (auth.user.isAuthenticated && auth.user.role === "admin")
     return (
       <>
         <Helmet>
@@ -46,26 +59,25 @@ function AdminDashboad({ auth }) {
               <table className="align-middle mb-0 table table-borderless table-striped table-hover">
                 <thead>
                   <tr>
+                    <th>Remove</th>
                     <th className="text-center">#</th>
-                    <th>Users</th>
+                    <th className="text-center">Users</th>
                     <th className="text-center">Email</th>
                     <th className="text-center">Password</th>
                     <th className="text-center">Status</th>
                     <th className="text-center">Edite</th>
-                    <th className="text-center">Remove</th>
                   </tr>
                 </thead>
                 <tbody>
                   {usershow.map((user, index) => (
                     <User
-                      key={user}
-                      userkey={user}
+                      key={user.username}
+                      userData={user}
                       index={index}
-                      onDelete={() =>
-                        setUserShow(usershow.filter((u) => user !== u))
-                      }
+                      setUserShow={setUserShow}
                     />
                   ))}
+                  <User addUser={true} setUserShow={setUserShow}/>
                 </tbody>
               </table>
             </div>
